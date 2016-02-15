@@ -26,6 +26,8 @@ int main(int argc, char * argv[])
             chrono::time_point<chrono::system_clock> start, end;
             start = chrono::system_clock::now();
 
+            // to find all solutions in a possibly not unique puzzle uncomment the following:
+//             puzzle.solve_ext(true);
             puzzle.solve();
 
             puzzle.print_solutions();
