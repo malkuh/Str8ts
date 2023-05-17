@@ -89,7 +89,6 @@ SMap::SMap(const SMap& smp)
     memcpy(blank, smp.blank, 81*sizeof(bool));
     memcpy(fixed, smp.fixed, 81*sizeof(bool));
 
-    char x, y;
     for (int i = 0; i < 9; i++) {
         for (auto str8t : smp.row_straights[i]) {
             Straight* str = new Straight(*str8t);

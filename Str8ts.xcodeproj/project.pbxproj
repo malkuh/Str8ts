@@ -7,7 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2CFEA1BC2A14D13100D2DA28 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CFEA1BB2A14D13100D2DA28 /* main.cpp */; };
+		2C0DCF2D2A14E8DB00D99F9B /* SMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF222A14E8DB00D99F9B /* SMap.cpp */; };
+		2C0DCF2E2A14E8DB00D99F9B /* Str8ts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF232A14E8DB00D99F9B /* Str8ts.cpp */; };
+		2C0DCF2F2A14E8DB00D99F9B /* LUTs.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF242A14E8DB00D99F9B /* LUTs.hpp */; };
+		2C0DCF302A14E8DB00D99F9B /* SMap.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF252A14E8DB00D99F9B /* SMap.hpp */; };
+		2C0DCF312A14E8DB00D99F9B /* Straight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF262A14E8DB00D99F9B /* Straight.cpp */; };
+		2C0DCF322A14E8DB00D99F9B /* Straight.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF272A14E8DB00D99F9B /* Straight.hpp */; };
+		2C0DCF332A14E8DB00D99F9B /* solver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF282A14E8DB00D99F9B /* solver.cpp */; };
+		2C0DCF342A14E8DB00D99F9B /* LUTs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF292A14E8DB00D99F9B /* LUTs.cpp */; };
+		2C0DCF352A14E8DB00D99F9B /* STable.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF2A2A14E8DB00D99F9B /* STable.hpp */; };
+		2C0DCF362A14E8DB00D99F9B /* STable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF2B2A14E8DB00D99F9B /* STable.cpp */; };
+		2C0DCF372A14E8DB00D99F9B /* Str8ts.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0DCF2C2A14E8DB00D99F9B /* Str8ts.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +33,21 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2C0DCF1D2A14D46100D99F9B /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		2C0DCF1E2A14D4AB00D99F9B /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		2C0DCF1F2A14D4AB00D99F9B /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
+		2C0DCF222A14E8DB00D99F9B /* SMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SMap.cpp; path = src/SMap.cpp; sourceTree = "<group>"; };
+		2C0DCF232A14E8DB00D99F9B /* Str8ts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Str8ts.cpp; path = src/Str8ts.cpp; sourceTree = "<group>"; };
+		2C0DCF242A14E8DB00D99F9B /* LUTs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = LUTs.hpp; path = src/LUTs.hpp; sourceTree = "<group>"; };
+		2C0DCF252A14E8DB00D99F9B /* SMap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SMap.hpp; path = src/SMap.hpp; sourceTree = "<group>"; };
+		2C0DCF262A14E8DB00D99F9B /* Straight.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Straight.cpp; path = src/Straight.cpp; sourceTree = "<group>"; };
+		2C0DCF272A14E8DB00D99F9B /* Straight.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Straight.hpp; path = src/Straight.hpp; sourceTree = "<group>"; };
+		2C0DCF282A14E8DB00D99F9B /* solver.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = solver.cpp; path = src/solver.cpp; sourceTree = "<group>"; };
+		2C0DCF292A14E8DB00D99F9B /* LUTs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = LUTs.cpp; path = src/LUTs.cpp; sourceTree = "<group>"; };
+		2C0DCF2A2A14E8DB00D99F9B /* STable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = STable.hpp; path = src/STable.hpp; sourceTree = "<group>"; };
+		2C0DCF2B2A14E8DB00D99F9B /* STable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = STable.cpp; path = src/STable.cpp; sourceTree = "<group>"; };
+		2C0DCF2C2A14E8DB00D99F9B /* Str8ts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Str8ts.hpp; path = src/Str8ts.hpp; sourceTree = "<group>"; };
 		2CFEA1B82A14D13100D2DA28 /* Str8ts */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Str8ts; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CFEA1BB2A14D13100D2DA28 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,7 +64,20 @@
 		2CFEA1AF2A14D13100D2DA28 = {
 			isa = PBXGroup;
 			children = (
-				2CFEA1BA2A14D13100D2DA28 /* Str8ts */,
+				2C0DCF292A14E8DB00D99F9B /* LUTs.cpp */,
+				2C0DCF242A14E8DB00D99F9B /* LUTs.hpp */,
+				2C0DCF222A14E8DB00D99F9B /* SMap.cpp */,
+				2C0DCF252A14E8DB00D99F9B /* SMap.hpp */,
+				2C0DCF282A14E8DB00D99F9B /* solver.cpp */,
+				2C0DCF2B2A14E8DB00D99F9B /* STable.cpp */,
+				2C0DCF2A2A14E8DB00D99F9B /* STable.hpp */,
+				2C0DCF232A14E8DB00D99F9B /* Str8ts.cpp */,
+				2C0DCF2C2A14E8DB00D99F9B /* Str8ts.hpp */,
+				2C0DCF262A14E8DB00D99F9B /* Straight.cpp */,
+				2C0DCF272A14E8DB00D99F9B /* Straight.hpp */,
+				2C0DCF1E2A14D4AB00D99F9B /* CMakeLists.txt */,
+				2C0DCF1F2A14D4AB00D99F9B /* Readme.md */,
+				2C0DCF1D2A14D46100D99F9B /* src */,
 				2CFEA1B92A14D13100D2DA28 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,14 +88,6 @@
 				2CFEA1B82A14D13100D2DA28 /* Str8ts */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		2CFEA1BA2A14D13100D2DA28 /* Str8ts */ = {
-			isa = PBXGroup;
-			children = (
-				2CFEA1BB2A14D13100D2DA28 /* main.cpp */,
-			);
-			path = Str8ts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,7 +147,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CFEA1BC2A14D13100D2DA28 /* main.cpp in Sources */,
+				2C0DCF2D2A14E8DB00D99F9B /* SMap.cpp in Sources */,
+				2C0DCF2E2A14E8DB00D99F9B /* Str8ts.cpp in Sources */,
+				2C0DCF2F2A14E8DB00D99F9B /* LUTs.hpp in Sources */,
+				2C0DCF302A14E8DB00D99F9B /* SMap.hpp in Sources */,
+				2C0DCF312A14E8DB00D99F9B /* Straight.cpp in Sources */,
+				2C0DCF322A14E8DB00D99F9B /* Straight.hpp in Sources */,
+				2C0DCF332A14E8DB00D99F9B /* solver.cpp in Sources */,
+				2C0DCF342A14E8DB00D99F9B /* LUTs.cpp in Sources */,
+				2C0DCF352A14E8DB00D99F9B /* STable.hpp in Sources */,
+				2C0DCF362A14E8DB00D99F9B /* STable.cpp in Sources */,
+				2C0DCF372A14E8DB00D99F9B /* Str8ts.hpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

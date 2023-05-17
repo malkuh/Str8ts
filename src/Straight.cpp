@@ -95,7 +95,7 @@ void Straight::hidden_pairs()
     for (uint16_t* s1 = start; s1 < end; s1 += incr) {
         if (set_bits[*s1 & sure] == 2) {
             for (uint16_t* s2 = s1+incr; s2 < end; s2 += incr) {
-                if (*s1 & sure == *s2 & sure) {
+                if (*s1 & (sure == *s2) & sure) {
                     *s1 &= sure;
                     *s2 &= sure;
                 }

@@ -47,6 +47,9 @@ bool Str8ts::solve(SMap* st_instance)
             return true;
         }
     }
+    else {
+        return false;
+    }
 }
 
 /*

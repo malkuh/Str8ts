@@ -38,7 +38,7 @@ public:
 
     // return number of solutions
     int get_num_solutions() {
-        return solution_tables.size();  
+        return (int) solution_tables.size();  
     };
 
     // switch to extensive brute force search
