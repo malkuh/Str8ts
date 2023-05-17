@@ -47,7 +47,7 @@
 		2C0DCF2A2A14E8DB00D99F9B /* STable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = STable.hpp; path = src/STable.hpp; sourceTree = "<group>"; };
 		2C0DCF2B2A14E8DB00D99F9B /* STable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = STable.cpp; path = src/STable.cpp; sourceTree = "<group>"; };
 		2C0DCF2C2A14E8DB00D99F9B /* Str8ts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Str8ts.hpp; path = src/Str8ts.hpp; sourceTree = "<group>"; };
-		2CFEA1B82A14D13100D2DA28 /* Str8ts */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Str8ts; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CFEA1B82A14D13100D2DA28 /* str8ts */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = str8ts; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +85,7 @@
 		2CFEA1B92A14D13100D2DA28 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2CFEA1B82A14D13100D2DA28 /* Str8ts */,
+				2CFEA1B82A14D13100D2DA28 /* str8ts */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -93,21 +93,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2CFEA1B72A14D13100D2DA28 /* Str8ts */ = {
+		2CFEA1B72A14D13100D2DA28 /* str8ts */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2CFEA1BF2A14D13100D2DA28 /* Build configuration list for PBXNativeTarget "Str8ts" */;
+			buildConfigurationList = 2CFEA1BF2A14D13100D2DA28 /* Build configuration list for PBXNativeTarget "str8ts" */;
 			buildPhases = (
 				2CFEA1B42A14D13100D2DA28 /* Sources */,
 				2CFEA1B52A14D13100D2DA28 /* Frameworks */,
 				2CFEA1B62A14D13100D2DA28 /* CopyFiles */,
+				2C0DCF382A14FB9D00D99F9B /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Str8ts;
+			name = str8ts;
 			productName = Str8ts;
-			productReference = 2CFEA1B82A14D13100D2DA28 /* Str8ts */;
+			productReference = 2CFEA1B82A14D13100D2DA28 /* str8ts */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -137,10 +138,32 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2CFEA1B72A14D13100D2DA28 /* Str8ts */,
+				2CFEA1B72A14D13100D2DA28 /* str8ts */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2C0DCF382A14FB9D00D99F9B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"$BUILT_PRODUCTS_DIR\" > ~/Library/Developer/Xcode/DerivedData/built_products_dir\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2CFEA1B42A14D13100D2DA28 /* Sources */ = {
@@ -305,7 +328,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2CFEA1BF2A14D13100D2DA28 /* Build configuration list for PBXNativeTarget "Str8ts" */ = {
+		2CFEA1BF2A14D13100D2DA28 /* Build configuration list for PBXNativeTarget "str8ts" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2CFEA1C02A14D13100D2DA28 /* Debug */,
