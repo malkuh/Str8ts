@@ -65,29 +65,30 @@ STable::STable(char nums[9][9], bool blks[9][9])
 void STable::print() const
 {
     // opening the table
-    printf("\u2554");
+    printf("\u2554\u2550");
     for (int j = 0; j < 9; j++) {
-        printf("\u2550");
+        printf("\u2550\u2550");
     }
     printf("\u2557\n");
     for (int i = 0; i < 9; i++) {
         // siding
-        printf("\u2551");
+        printf("\u2551 ");
         for (int j = 0; j < 9; j++) {
             if (blanks[i][j]) {
                 if (numbers[i][j]) {
-                    cout << (char)(numbers[i][j]+'a'-1);
+                    cout << "\u001b[7m" << (int) numbers[i][j] << "\u001b[;m ";
+                    // cout << (char)(numbers[i][j]+'a'-1) << " ";
                 }
                 else {
-                    cout << "#";
+                    cout << "█ ";
                 }
             }
             else {
                 if (numbers[i][j]) {
-                    cout << (int)numbers[i][j];
+                    cout << (int)numbers[i][j] << " ";
                 }
                 else {
-                    cout << ".";
+                    cout << ". ";
                 }
             }
         }
@@ -97,9 +98,9 @@ void STable::print() const
     }
 
     // closing table
-    printf("\u255A");
+    printf("\u255A\u2550");
     for (int j = 0; j < 9; j++) {
-        printf("\u2550");
+        printf("\u2550\u2550");
     }
     printf("\u255D\n");
 }
@@ -108,100 +109,3 @@ bool STable::get_loaded() const
 {
     return loaded;
 }
-
-// deprecated input formats
-
-// STable::STable(string filename)
-// {
-//     bool reverse = true;
-//     ifstream file(filename, ios::in);
-//     if(file.is_open()) {
-//         char c;
-//         if (reverse) {
-//             for (int i = 0; i < 9; i++) {
-//                 for (int j = 0; j < 9; j++) {
-//                     do
-//                         file >> c;
-//                     while('0' > c || c > '9');
-//                     if (c == '0')
-//                         numbers[i][j] = 0;
-//                     else
-//                         numbers[i][j] = char (c - '0');
-//                 }
-//             }
-//             for (int i = 0; i < 9; i++) {
-//                 for (int j = 0; j < 9; j++) {
-//                     do
-//                         file >> c;
-//                     while('0' > c || c > '9');
-//                     if('1' == c)
-//                         blanks[i][j] = true;
-//                     else
-//                         blanks[i][j] = false;
-//                 }
-//             }
-//         }
-//         else
-//         {
-//             for (int i = 0; i < 9; i++) {
-//                 for (int j = 0; j < 9; j++) {
-//                     do
-//                         file >> c;
-//                     while('0' > c || c > '9');
-//                     if('1' == c)
-//                         blanks[i][j] = true;
-//                     else
-//                         blanks[i][j] = false;
-//                 }
-//             }
-//             for (int i = 0; i < 9; i++) {
-//                 for (int j = 0; j < 9; j++) {
-//                     do
-//                         file >> c;
-//                     while('0' > c || c > '9');
-//                     if (c == '0')
-//                         numbers[i][j] = 0;
-//                     else
-//                         numbers[i][j] = char (c - '0');
-//                 }
-//             }
-//         }
-//         file.close();
-//     }
-//     else
-//         cout << "Error reading file!" << endl;
-// }
-//
-// STable::STable(string filename)
-// {
-//     ifstream file(filename, ios::in);
-//     if(file.is_open()) {
-//         char c;
-//         for (int i = 0; i < 9; i++) {
-//             for (int j = 0; j < 9; j++) {
-//                 do
-//                     file >> c;
-//                 while('0' > c || c > '9');
-//                 if('1' == c)
-//                     blanks[i][j] = true;
-//                 else
-//                     blanks[i][j] = false;
-//             }
-//         }
-//         for (int i = 0; i < 9; i++) {
-//             for (int j = 0; j < 9; j++) {
-//                 do
-//                     file >> c;
-//                 while('0' > c || c > '9');
-//                 if (c == '0')
-//                     numbers[i][j] = 0;
-//                 else
-//                     numbers[i][j] = char (c - '0');
-//             }
-//         }
-//         file.close();
-//     }
-//     else
-//         cout << "Error reading file!" << endl;
-// }
-
