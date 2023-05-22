@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Straight::Straight(SMap* m, uint16_t* arg_start, uint16_t* arg_end, size_t arg_incr) : map(m), start(arg_start), end(arg_end), incr(arg_incr)
+Straight::Straight(SMap* m, uint16_t* arg_start, uint16_t* arg_end, size_t arg_incr, int arg_starts_at) : map(m), start(arg_start), end(arg_end), incr(arg_incr), starts_at(arg_starts_at)
 {
     length = (arg_end - arg_start)/arg_incr;
 }
@@ -115,5 +115,6 @@ bool Straight::range_violation()
     if (set_bits[set_range] <= length)
         return false;
     else
+        range_violation_verbose();
         return true;
 }

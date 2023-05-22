@@ -1,17 +1,42 @@
+//
+//  main.cpp
+//  Str8tsSolver
+//
+//  Created by Hans-Peter Bodden on 13.05.23.
+//
+
 #include <iostream>
 #include <chrono>
 #include <ctime>
 
 #include "Str8ts.hpp"
+#include "Stats.hpp"
+#include "runstats.hpp"
 
 using namespace std;
 
+bool opt_verbose = false;
+bool opt_trace = false;
+
 int main(int argc, char * argv[])
 {
+    Runstats * runstats = new Runstats();
+    
+    
     // loop over all input problems
     for (int j = 1; j < argc; j++) {
+        string name = "file" + to_string(j);
 
         string file = argv[j];
+        
+        if (file == "-v") {
+            opt_verbose = true;
+            continue;
+        }
+        if (file == "-t") {
+            opt_trace = true;
+            continue;
+        }
 
         cout << "Loading " << file << endl;
 
@@ -41,6 +66,10 @@ int main(int argc, char * argv[])
             cout << "Couldn't load problem." << endl;
         }
     }
+    if ( opt_trace ) {
+        runstats->print_stats();
+    }
 
     return 0;
 }
+

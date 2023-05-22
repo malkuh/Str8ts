@@ -25,8 +25,11 @@ struct Straight
 
     // number of digits in the straight
     char length;
+    
+    // Straight starts at position:
+    int starts_at;
 
-    Straight(SMap* m, uint16_t* arg_start, uint16_t* arg_end, size_t arg_incr);
+    Straight(SMap* m, uint16_t* arg_start, uint16_t* arg_end, size_t arg_incr, int arg_starts_at);
     Straight(SMap* m);
 
     // heuristics
@@ -38,6 +41,7 @@ struct Straight
     void hidden_pairs();
 
     bool range_violation();
+    void range_violation_verbose();
 
 };
 

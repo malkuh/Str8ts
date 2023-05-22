@@ -1,9 +1,11 @@
 #include "SMap.hpp"
 
 #include "LUTs.hpp"
+#include "runstats.hpp"
 
 using namespace std;
 
+extern bool opt_verbose;
 /*
  * Constructors and such
  */
@@ -33,7 +35,7 @@ SMap::SMap(const STable table)
     }
 
     // init straights
-    char start, end, length;
+    char start, end;
     // rows
     for (char i = 0; i < 9; i++) {
         start = 0;
@@ -46,8 +48,9 @@ SMap::SMap(const STable table)
             end = start + 1;
             while (end < 9 && !blank[i*9+end])
                 end++;
-            length = end - start;
-            Straight* str8t = new Straight(this, fields+i*9+start, fields+i*9+end, 1);
+            Straight* str8t = new Straight(
+               this, fields+i*9+start, fields+i*9+end, 1, i*9 + start
+           );
             row_straights[i].push_back(str8t);
             start = end + 1;
         }
@@ -65,8 +68,9 @@ SMap::SMap(const STable table)
             end = start + 1;
             while (end < 9 && !blank[end*9+j])
                 end++;
-            length = end - start;
-            Straight* str8t = new Straight(this, fields+start*9+j, fields+end*9+j, 9);
+            Straight* str8t = new Straight(
+                this, fields+start*9+j, fields+end*9+j, 9, start*9 + j
+            );
             col_straights[j].push_back(str8t);
             start = end + 1;
         }
@@ -134,6 +138,7 @@ SMap::~SMap()
 
 bool SMap::apply_rules()
 {
+    StartStop  x = StartStop(__func__);
     change();
 
     bool no_change = false;
@@ -170,6 +175,7 @@ bool SMap::apply_rules()
         // jumps here if somethings has changed
         violation_check:
         if (!violation_free()) {
+            if (opt_verbose) print();
             return false;
         }
     }
@@ -191,6 +197,7 @@ bool SMap::change()
 
 bool SMap::remove_used_digits()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 81; i++) {
         if(singles[fields[i]] && !fixed[i]) {
             char row = i%9;
@@ -211,6 +218,7 @@ bool SMap::remove_used_digits()
 
 bool SMap::straight_range()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
         for (auto str : row_straights[i])
             str->check_range();
@@ -224,6 +232,7 @@ bool SMap::straight_range()
 
 bool SMap::sure_candidates()
 {
+    StartStop  x = StartStop(__func__);
     uint16_t sure = 0;
     // remove sure candidates of one straight from the others
     for (int i = 0; i < 9; i++) {
@@ -249,6 +258,7 @@ bool SMap::sure_candidates()
 
 bool SMap::sure_singles()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
         for (auto str : row_straights[i])
             str->sure_singles();
@@ -260,6 +270,7 @@ bool SMap::sure_singles()
 
 bool SMap::stranded_digits()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
         for (auto str : row_straights[i])
             str->stranded_digits();
@@ -271,6 +282,7 @@ bool SMap::stranded_digits()
 
 bool SMap::naked_pairs()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
         for (auto str : row_straights[i])
             str->naked_pairs();
@@ -283,6 +295,7 @@ bool SMap::naked_pairs()
 bool SMap::naked_groups()
 {
     // for pairs
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (set_bits[fields[9*i+j]] == 2) {
@@ -320,6 +333,7 @@ bool SMap::naked_groups()
 
 bool SMap::make_sure()
 {
+    StartStop  x = StartStop(__func__);
     uint16_t sure = 0;
     for (int i = 0; i < 9; i++) {
         sure = 0;
@@ -338,6 +352,7 @@ bool SMap::make_sure()
 
 bool SMap::hidden_pairs()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
         for (auto str : row_straights[i])
             str->hidden_pairs();
@@ -373,8 +388,14 @@ bool SMap::solved()
 
 bool SMap::violation_free()
 {
+    extern bool opt_verbose;
+    
     for (int i = 0; i < 81; i++)
         if (!fields[i] && !blank[i]) {
+            if (opt_verbose) {
+                
+                cout << "ABCDEFGHJ"[i/9] << "123456789"[i%9] << " is dead:" << endl;
+            }
             return false;
         }
     for (int i = 0; i < 9; i++) {
