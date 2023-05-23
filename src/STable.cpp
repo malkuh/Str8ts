@@ -109,4 +109,3 @@ bool STable::get_loaded() const
 {
     return loaded;
 }
-
