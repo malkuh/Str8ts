@@ -42,3 +42,7 @@ void Straight::range_violation_verbose() {
 std::string coordinates(const int i) {
     return { ROWS[i/9], COLS[i%9] };
 }
+
+char row_as_char(const int i) {
+    return ROWS[i];
+}

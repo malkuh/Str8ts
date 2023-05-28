@@ -1,19 +1,42 @@
 #include "STable.hpp"
 
+#include <sstream>
+
+#include "prompt.hpp"
+
 using namespace std;
 
 
 STable::STable(string filename)
 {
-    ifstream file(filename, ios::in);
-    if(file.is_open()) {
+    string puzzle_str {};
+    puzzle_str.reserve(100); // typischerweise 9*9, evtl. noch ein paar \s
+    if (filename == "-i") {
+        prompt_puzzle(puzzle_str);
+        
+    } else if (filename == "-") {
+        getline(cin, puzzle_str, '\0');
+    } else {
+        ifstream from_file(filename, ios::in);
+        if ( from_file.is_open() ) {
+            getline(from_file, puzzle_str, '\0');
+        } else {
+            loaded = false;
+            cout << "Error reading file!" << endl;
+            return;
+        }
+    }
+    
+    istringstream file {puzzle_str};
+
+    {
         // TODO: make this a little more robust against errors in input file.
         char c;
         loaded = true;
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 if(file.eof()) {
-                     loaded = false;
+                    loaded = false;
                 }
                 else {
                     do {
@@ -43,12 +66,7 @@ STable::STable(string filename)
                 }
             }
         }
-        file.close();
     }
-    else {
-        cout << "Error reading file!" << endl;
-    }
-    
 }
 
 
@@ -77,7 +95,6 @@ void STable::print() const
             if (blanks[i][j]) {
                 if (numbers[i][j]) {
                     cout << "\u001b[7m" << (int) numbers[i][j] << "\u001b[;m ";
-                    // cout << (char)(numbers[i][j]+'a'-1) << " ";
                 }
                 else {
                     cout << "█ ";
@@ -109,3 +126,4 @@ bool STable::get_loaded() const
 {
     return loaded;
 }
+

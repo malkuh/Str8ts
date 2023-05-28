@@ -1,3 +1,10 @@
+//
+//  main.cpp
+//  Str8tsSolver
+//
+//  Created by Hans-Peter Bodden on 13.05.23.
+//
+
 #include <iostream>
 #include <chrono>
 #include <ctime>
@@ -18,9 +25,8 @@ int main(int argc, char * argv[])
     
     // loop over all input problems
     for (int j = 1; j < argc; j++) {
-        string name = "file" + to_string(j);
 
-        string file = argv[j];
+        const string file = argv[j];
         
         if (file == "-v") {
             opt_verbose = true;
@@ -40,9 +46,7 @@ int main(int argc, char * argv[])
 
             cout << "Solving the puzzle..." << endl;
 
-            // time start
-            chrono::time_point<chrono::system_clock> start, end;
-            start = chrono::system_clock::now();
+            auto start = chrono::system_clock::now();
 
             // to find all solutions in a possibly not unique puzzle uncomment the following:
 //             puzzle.solve_ext(true);
@@ -51,9 +55,15 @@ int main(int argc, char * argv[])
             puzzle.print_solutions();
 
             // time end
-            end = chrono::system_clock::now();
+            auto end = chrono::system_clock::now();
+            
+            const string endmsg =
+                puzzle.get_num_solutions() ?
+                "Solved in " :
+                "No solution found in "
+            ;
             chrono::duration<double> elapsed_seconds = end - start;
-            cout << "Solved in " << elapsed_seconds.count() << " sec.\n";
+            cout << endmsg << elapsed_seconds.count() << " sec.\n";
         }
         else {
             cout << "Couldn't load problem." << endl;
