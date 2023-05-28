@@ -19,8 +19,8 @@ $ ./solver ../problems/example.txt
 ```
 ### Options
 
-- *-v*: be verbose
-- *-t*: activate tracing and produce final statistics
+- *-v*: be verbose, some more messages.
+- *-t*: activate tracing and produce final statistics.
 
 ### Input
 
