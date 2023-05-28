@@ -17,6 +17,10 @@ and can be used with
 ```sh
 $ ./solver ../problems/example.txt
 ```
+### Options
+
+- *-v*: be verbose
+- *-t*: activate tracing and produce final statistics
 
 ### Input
 
