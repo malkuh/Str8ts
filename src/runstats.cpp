@@ -1,15 +1,13 @@
+#include "runstats.hpp"
 
 #include <iostream>
 #include <iomanip>
-#include <cassert>
-#include "runstats.hpp"
 
 Runstats * runstats = NULL;
 
 Runstats::Runstats() {
     this->root = new Node("**MAIN**");
     this->current = this->root;
-    assert ( runstats == NULL );
     runstats = this;
 }
 
@@ -46,7 +44,6 @@ void Runstats::start(const std::string & name) {
 void Runstats::stop(const int successes) {
     current->successes += successes;
     current = current->parent;
-    assert (current != NULL);
     
 }
 void Runstats::print_stats() {

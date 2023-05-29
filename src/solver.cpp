@@ -2,15 +2,12 @@
 //  main.cpp
 //  Str8tsSolver
 //
-//  Created by Hans-Peter Bodden on 13.05.23.
-//
 
 #include <iostream>
 #include <chrono>
 #include <ctime>
 
 #include "Str8ts.hpp"
-#include "Stats.hpp"
 #include "runstats.hpp"
 
 using namespace std;

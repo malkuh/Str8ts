@@ -2,8 +2,6 @@
 //  runstats.hpp
 //  Str8tsSolver
 //
-//  Created by Hans-Peter Bodden on 18.05.23.
-//
 
 #ifndef runstats_hpp
 #define runstats_hpp

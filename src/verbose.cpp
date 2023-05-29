@@ -3,8 +3,6 @@
 //
 //
 
-#include <stdio.h>
-
 #include "verbose.hpp"
 #include "Straight.hpp"
 #include "SMap.hpp"
