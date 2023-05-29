@@ -19,8 +19,9 @@ $ ./solver ../problems/example.txt
 ```
 ### Options
 
-- *-v*: be verbose, some more messages.
-- *-t*: activate tracing and produce final statistics.
+- **-v**: be verbose, some more messages.
+- **-t**: activate tracing and produce final statistics.
+- **-i**: Get prompt to enter Straits row wise from command line.
 
 ### Input
 
