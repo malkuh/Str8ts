@@ -3,36 +3,37 @@
 #include <iostream>
 #include <iomanip>
 
-Runstats * runstats = NULL;
+namespace {
+// Runstats soll auf diese Weise ein Singleton sein
+Runstats runstats;
+}
 
 Runstats::Runstats() {
     this->root = new Node("**MAIN**");
     this->current = this->root;
-    runstats = this;
 }
 
 void Runstats::start(const std::string & name) {
     // Search in current's child for name
     Node * previous = NULL;
-    for ( Node * child = this->current->first; ; child = child->next) {
+    for ( Node * child = runstats.current->first; true ; child = child->next) {
         if ( child == NULL ) {
             // notfound
             child = new Node(name);
-            child->parent = current;
-            current->last = child;
+            child->parent = runstats.current;
             if ( previous ) {
                 previous->next = child;
             } else {
-                current->first = child;
+                runstats.current->first = child;
             }
-            current = child;
+            runstats.current = child;
             
             break;
         }
         if ( child->name == name ) {
             // found
-            child->count ++;
-            current = child;
+            child->count += 1;
+            runstats.current = child;
             break;
         }
         previous = child;
@@ -41,21 +42,20 @@ void Runstats::start(const std::string & name) {
     
 }
 
-void Runstats::stop(const int successes) {
-    current->successes += successes;
-    current = current->parent;
+void Runstats::stop() {
+    runstats.current = runstats.current->parent;
     
 }
 void Runstats::print_stats() {
     
     Node * stack[64];
     stack[0] = NULL;
-    Node * node = this->root;
+    Node * node = runstats.root;
     
     for (int i_stack = 0;;) {
         if ( node == NULL) {
             node = stack[i_stack];
-            i_stack --;
+            i_stack -= 1;
         } else {
             std::string indent = "";
             indent.resize(
@@ -66,8 +66,8 @@ void Runstats::print_stats() {
             std::cout
                 << name
                 << std::setw(7) << node->count
-                << std::endl;
-            i_stack ++;
+                << '\n';
+            i_stack += 1;
             stack[i_stack] = node->next;
             node = node->first;
         }

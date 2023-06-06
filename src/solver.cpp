@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  solver.cpp
 //  Str8tsSolver
 //
 
@@ -9,16 +9,16 @@
 
 #include "Str8ts.hpp"
 #include "runstats.hpp"
+#include "helpme.hpp"
 
 using namespace std;
 
 bool opt_verbose = false;
 bool opt_trace = false;
+bool opt_all = false;
 
 int main(int argc, char * argv[])
 {
-    Runstats * runstats = new Runstats();
-    
     
     // loop over all input problems
     for (int j = 1; j < argc; j++) {
@@ -33,7 +33,17 @@ int main(int argc, char * argv[])
             opt_trace = true;
             continue;
         }
+        if (file == "-a") {
+            opt_all = true;
+            continue;
+        }
 
+        if (file[0] == '-' and file.size() > 1) {
+            cerr << "option is invalid: " << file << '\n';
+            givehelp();
+            return 1;
+        }
+        
         cout << "Loading " << file << endl;
 
         Str8ts puzzle(file);
@@ -67,7 +77,7 @@ int main(int argc, char * argv[])
         }
     }
     if ( opt_trace ) {
-        runstats->print_stats();
+        Runstats::print_stats();
     }
 
     return 0;

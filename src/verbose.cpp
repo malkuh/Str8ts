@@ -21,20 +21,20 @@ void Straight::range_violation_verbose() {
         // row
         const int col = starts_at % 9;
         straight += ROWS[starts_at/9];
-        for ( int i = col; i < col + length; i++) {
+        for ( int i = col; i < col + length; i += 1 ) {
             straight += COLS[i];
         }
         
     } else {
         // col
         const int row = starts_at / 9;
-        for ( int i = row; i < row + length; i++) {
+        for ( int i = row; i < row + length; i += 1 ) {
             straight += ROWS[i];
         }
         straight += COLS[starts_at%9];
     }
     
-    std::cout << "range violation in " << straight << ":" << std::endl;
+    std::cout << "range violation in " << straight << ":\n";
 }
 
 std::string coordinates(const int i) {

@@ -6,6 +6,8 @@ using namespace std;
 
 Str8ts::Str8ts(string filename) : table(filename), map(table)
 {
+    extern bool opt_all;
+    solve_extensively = opt_all;
     ;
 }
 
@@ -57,6 +59,9 @@ bool Str8ts::solve(SMap* st_instance)
                     solved = true;
                     if (!solve_extensively)
                         break;
+                    if ( solution_tables.size() > 16 ) {
+                        break;
+                    }
                 }
             }
             // free resources
