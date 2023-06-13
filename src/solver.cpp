@@ -39,7 +39,7 @@ int main(int argc, char * argv[])
         }
 
         if (file != "-i" and file[0] == '-' and file.size() > 1) {
-            cerr << "option is invalid: " << file << '\n';
+            if (file != "-h" ) cerr << "option is invalid: " << file << '\n';
             givehelp();
             return 1;
         }

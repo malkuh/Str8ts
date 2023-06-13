@@ -8,9 +8,17 @@ namespace {
 Runstats runstats;
 }
 
-Runstats::Runstats() {
-    this->root = new Node("**MAIN**");
-    this->current = this->root;
+Node::~Node() {
+    // std::cerr << "deleting Node at " << this << " - " << name  << '\n';
+    if (parent == NULL) {
+        return;
+    }
+    if (next) {
+        delete next;
+    }
+    if (first) {
+        delete first;
+    }
 }
 
 void Runstats::start(const std::string & name) {
@@ -50,7 +58,7 @@ void Runstats::print_stats() {
     
     Node * stack[64];
     stack[0] = NULL;
-    Node * node = runstats.root;
+    Node * node = & runstats.root;
     
     for (int i_stack = 0;;) {
         if ( node == NULL) {
@@ -73,4 +81,5 @@ void Runstats::print_stats() {
         }
         if (i_stack == 0 ) break;
     }
+   
 }
