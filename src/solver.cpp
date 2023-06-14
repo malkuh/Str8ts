@@ -15,6 +15,7 @@ using namespace std;
 
 bool opt_verbose = false;
 bool opt_trace = false;
+bool opt_debug = false;
 bool opt_all = false;
 
 int main(int argc, char * argv[])
@@ -31,6 +32,10 @@ int main(int argc, char * argv[])
         }
         if (file == "-t") {
             opt_trace = true;
+            continue;
+        }
+        if (file == "-d") {
+            opt_debug = true;
             continue;
         }
         if (file == "-a") {

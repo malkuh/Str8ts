@@ -12,25 +12,20 @@ extern bool opt_trace;
 
 struct Node {
     friend class Runstats;
-    Node(std::string name) : name(name) { };
+    Node(std::string name, Node * parent) : name(name), parent(parent) { };
+    ~Node();
 private:
     std::string name;
-    Node * first = 0;
-    Node * next = 0;
-    Node * parent = 0;
+    std::unique_ptr<Node> first = nullptr;
+    std::unique_ptr<Node> next = nullptr;
+    Node * parent;
     int count = 1;
-    
-    ~Node();
-    // No copy constructor nor assignment operator
-    Node & operator=(const Node &);
-    Node(const Node &);
-    
     
 };
 
 class Runstats {
 private:
-    Node  root = Node("**main**");
+    Node  root = Node("**main**", nullptr);
     Node * current = & root;
 public:
     static void start(const std::string &);
