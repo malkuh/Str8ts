@@ -7,7 +7,7 @@ project(Str8ts
     DESCRIPTION "Str8ts Solver"
     LANGUAGES CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3")
 
 add_executable(solver "src/solver.cpp")
 

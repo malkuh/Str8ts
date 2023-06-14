@@ -3,38 +3,35 @@
 #include <iostream>
 #include <iomanip>
 
+extern bool opt_debug;
 namespace {
 // Runstats soll auf diese Weise ein Singleton sein
 Runstats runstats;
 }
 
 Node::~Node() {
-    // std::cerr << "deleting Node at " << this << " - " << name  << '\n';
-    if (parent == NULL) {
-        return;
-    }
-    if (next) {
-        delete next;
-    }
-    if (first) {
-        delete first;
+    if (opt_debug) {
+        std::cerr << "deleting Node at " << this << " - " << name  << '\n';
     }
 }
 
+
 void Runstats::start(const std::string & name) {
     // Search in current's child for name
-    Node * previous = NULL;
-    for ( Node * child = runstats.current->first; true ; child = child->next) {
-        if ( child == NULL ) {
+    Node * previous = nullptr;
+    for ( auto child = runstats.current->first.get();
+         true ; child = child->next.get()) {
+        if ( !child ) {
             // notfound
-            child = new Node(name);
-            child->parent = runstats.current;
+            std::unique_ptr<Node> new_child =
+                    std::make_unique<Node>( name, runstats.current);
+            auto new_current = new_child.get();
             if ( previous ) {
-                previous->next = child;
+                previous->next = std::move(new_child);
             } else {
-                runstats.current->first = child;
+                runstats.current->first = std::move(new_child);
             }
-            runstats.current = child;
+            runstats.current = new_current;
             
             break;
         }
@@ -57,11 +54,11 @@ void Runstats::stop() {
 void Runstats::print_stats() {
     
     Node * stack[64];
-    stack[0] = NULL;
+    stack[0] = nullptr;
     Node * node = & runstats.root;
     
     for (int i_stack = 0;;) {
-        if ( node == NULL) {
+        if ( !node ) {
             node = stack[i_stack];
             i_stack -= 1;
         } else {
@@ -76,8 +73,8 @@ void Runstats::print_stats() {
                 << std::setw(7) << node->count
                 << '\n';
             i_stack += 1;
-            stack[i_stack] = node->next;
-            node = node->first;
+            stack[i_stack] = node->next.get();
+            node = node->first.get();
         }
         if (i_stack == 0 ) break;
     }
