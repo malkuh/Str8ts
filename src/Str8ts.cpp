@@ -33,29 +33,27 @@ bool Str8ts::solve(SMap* st_instance)
         // if not solved yet call this function recursively with guessed numbers
         if(!st_instance->solved()) {
             extern bool opt_verbose;
-            SMap * st_inst_save = NULL;
             
             if (opt_verbose) {
                 st_instance->print();
-                st_inst_save = new SMap(* st_instance);
                 cout << "\nGuessing..." << endl;
             }
             // returns list with differently guessed numbers
-            list<SMap*> sub_t_instances = st_instance->choose();
+            auto sub_t_instances = st_instance->choose();
             bool solved = false;
-            for (auto st_inst : sub_t_instances) {
+            for (auto && st_inst : sub_t_instances) {
                 if (opt_verbose) {
                     string guess = " trying ";
                     for (int i = 0; i < 81; i++) {
                         
-                        if (st_inst->fields[i] == st_inst_save->fields[i]) continue;
+                        if (st_inst->fields[i] == st_instance->fields[i]) continue;
                         guess += '0' + ffs(st_inst->fields[i]);
                         guess += " at " + coordinates(i);
                         cout << guess << endl;
                         break;
                     }
                 }
-                if (solve(st_inst)) {
+                if (solve(st_inst.get())) {
                     solved = true;
                     if (!solve_extensively)
                         break;
@@ -65,10 +63,6 @@ bool Str8ts::solve(SMap* st_instance)
                 }
             }
             // free resources
-            for (auto st_inst : sub_t_instances) {
-                delete st_inst;
-            }
-            if (st_inst_save) delete st_inst_save;
             return solved;
         }
         else {

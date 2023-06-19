@@ -18,17 +18,17 @@ struct SMap
     // Attributes //
     // Bitmaps for each field.
     // If n is a possible digit in field i, then 2^(n-1) & fields[i] is true.
-    uint16_t* fields;
-    bool* blank;
-    bool* fixed;
+    uint16_t fields[9*9];
+    bool blank[9*9];
+    bool fixed[9*9];
     int hash_value = 0;
 
     uint16_t sure_cand_row[9] = {};
     uint16_t sure_cand_col[9] = {};
 
     // saves  each straight
-    std::list<Straight*> row_straights[9];
-    std::list<Straight*> col_straights[9];
+    std::list<std::unique_ptr<Straight>> row_straights[9];
+    std::list<std::unique_ptr<Straight>> col_straights[9];
 
     SMap(const STable table);
     SMap(std::string filename);
@@ -61,7 +61,7 @@ struct SMap
     bool violation_free();
 
     // returns a list for backtracking
-    std::list<SMap*> choose();
+    std::list<std::unique_ptr<SMap>> choose();
 
     // Output
     void print();
