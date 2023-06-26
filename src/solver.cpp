@@ -60,8 +60,6 @@ int main(int argc, char * argv[])
 
             auto start = chrono::system_clock::now();
 
-            // to find all solutions in a possibly not unique puzzle uncomment the following:
-//             puzzle.solve_ext(true);
             puzzle.solve();
 
             puzzle.print_solutions();
@@ -78,7 +76,7 @@ int main(int argc, char * argv[])
             cout << endmsg << elapsed_seconds.count() << " sec.\n";
         }
         else {
-            cout << "Couldn't load problem." << endl;
+            cout << "Couldn't load problem.\n";
         }
     }
     if ( opt_trace ) {

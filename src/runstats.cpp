@@ -8,6 +8,9 @@ namespace {
 // Runstats soll auf diese Weise ein Singleton sein
 Runstats runstats;
 }
+Node::Node(std::string name, Node * parent) :
+    name(name), parent(parent), first(nullptr), next(nullptr), count(1) {
+}
 
 Node::~Node() {
     if (opt_debug) {
@@ -57,19 +60,24 @@ void Runstats::print_stats() {
     stack[0] = nullptr;
     Node * node = & runstats.root;
     
+    std::string name_indented;
+    name_indented.reserve(64);
+    
     for (int i_stack = 0;;) {
         if ( !node ) {
             node = stack[i_stack];
             i_stack -= 1;
         } else {
-            std::string indent = "";
-            indent.resize(
+            name_indented.clear();
+            name_indented.resize(
                 i_stack > 0 ? 2 * i_stack - 1 : 0, '.'
             );
-            std::string name = indent + " " + node->name + " ";
-            name.resize(64, '.');
+            name_indented += " ";
+            name_indented += node->name;
+            name_indented += " ";
+            name_indented.resize(64, '.');
             std::cout
-                << name
+                << name_indented
                 << std::setw(7) << node->count
                 << '\n';
             i_stack += 1;

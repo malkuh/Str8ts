@@ -22,7 +22,7 @@ void prompt_puzzle(std::string & puzzle) {
     initscr();
     cbreak();
     keypad(stdscr, TRUE);
-    curs_set(0); // kein Cursour
+    curs_set(0); // do not display cursour
     noecho();
     
     start_color();
@@ -35,32 +35,32 @@ void prompt_puzzle(std::string & puzzle) {
     
     mvprintw(0, 16, "Press q to exit");
     refresh();
-    
-    auto outer_top = newwin(1, 1 + 9 * Cell::w, 4, 4);
-    wbkgd(outer_top, color_outer);
-    for (auto i = 0; i!= 9 ; ++i) {
-        mvwaddch(outer_top, 0, 3 + i * Cell::w, '1' + i);
+    {
+        auto outer_top = newwin(1, 1 + 9 * Cell::w, 4, 4);
+        wbkgd(outer_top, color_outer);
+        for (auto i = 0; i!= 9 ; ++i) {
+            mvwaddch(outer_top, 0, 3 + i * Cell::w, '1' + i);
+        }
+        wrefresh(outer_top);
+        auto outer_left = newwin(9 * Cell::h, 3, 5, 2);
+        wbkgd(outer_left, color_outer);
+        for ( auto i = 0; i != 9; ++i ) {
+            mvwaddch(outer_left, 1 + i * Cell::h, 1, 'A' + i);
+        }
+        wrefresh(outer_left);
+        auto outer_right = newwin(9 * Cell::h, 3, 5, 5 + 9 * Cell::w);
+        wbkgd(outer_right, color_outer);
+        wrefresh(outer_right);
+        auto outer_bottom = newwin(1,1 + 9 * Cell::w + 1, 5 + 9 * Cell::h, 4);
+        wbkgd(outer_bottom, color_outer);
+        wrefresh(outer_bottom);
     }
-    wrefresh(outer_top);
-    auto outer_left = newwin(9 * Cell::h, 3, 5, 2);
-    wbkgd(outer_left, color_outer);
-    for ( auto i = 0; i != 9; ++i ) {
-        mvwaddch(outer_left, 1 + i * Cell::h, 1, 'A' + i);
-    }
-    wrefresh(outer_left);
-    auto outer_right = newwin(9 * Cell::h, 3, 5, 5 + 9 * Cell::w);
-    wbkgd(outer_right, color_outer);
-    wrefresh(outer_right);
-    auto outer_bottom = newwin(1,1 + 9 * Cell::w + 1, 5 + 9 * Cell::h, 4);
-    wbkgd(outer_bottom, color_outer);
-    wrefresh(outer_bottom);
-    
     Cell cell[9][9];
     for ( auto row = 0; row != 9; ++row ) {
         for ( auto col = 0; col != 9; ++col ) {
-            auto startx = 5 + Cell::w * col;
-            auto starty = 5 + Cell::h * row;
-            auto win = newwin(Cell::h, Cell::w, starty, startx);
+            const auto startx = 5 + Cell::w * col;
+            const auto starty = 5 + Cell::h * row;
+            const auto win = newwin(Cell::h, Cell::w, starty, startx);
             fill_cell(win);
             
             cell[row] [col].win = win;

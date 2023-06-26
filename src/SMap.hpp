@@ -7,6 +7,8 @@
 #include <iostream>
 #include <inttypes.h>
 #include <cstring>
+#include <array>
+#include <memory>
 
 #include "LUTs.hpp"
 #include "Straight.hpp"
@@ -18,13 +20,13 @@ struct SMap
     // Attributes //
     // Bitmaps for each field.
     // If n is a possible digit in field i, then 2^(n-1) & fields[i] is true.
-    uint16_t fields[9*9];
-    bool blank[9*9];
-    bool fixed[9*9];
+    std::array<Candidates, 9*9> fields;
+    std::array<bool, 9*9> blank;
+    std::array<bool, 9*9> fixed;
     int hash_value = 0;
 
-    uint16_t sure_cand_row[9] = {};
-    uint16_t sure_cand_col[9] = {};
+    std::array<Candidates, 9> sure_cand_row;
+    std::array<Candidates, 9> sure_cand_col;
 
     // saves  each straight
     std::list<std::unique_ptr<Straight>> row_straights[9];

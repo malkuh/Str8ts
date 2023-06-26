@@ -7,19 +7,20 @@
 #define runstats_hpp
 
 #include <string>
+#include <memory>
 
 extern bool opt_trace;
 
 struct Node {
     friend class Runstats;
-    Node(std::string name, Node * parent) : name(name), parent(parent) { };
+    Node(std::string name, Node * parent);
     ~Node();
 private:
     std::string name;
-    std::unique_ptr<Node> first = nullptr;
-    std::unique_ptr<Node> next = nullptr;
+    std::unique_ptr<Node> first;
+    std::unique_ptr<Node> next;
     Node * parent;
-    int count = 1;
+    int count;
     
 };
 

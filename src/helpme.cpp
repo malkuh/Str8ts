@@ -46,7 +46,7 @@ void givehelp(void) {
     
     std::cerr << " Str8ts Solver\n\n\tcompiled at " << __DATE__ << ", " << __TIME__ << " cpp=" << __cplusplus << '\n';
     
-    for (const auto line: helptext) {
+    for (const auto & line: helptext) {
         
         const char indent = isupper(line[0]) ? ' ' : '\t';
         

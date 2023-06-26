@@ -6,11 +6,13 @@
 using namespace std;
 
 extern bool opt_verbose;
+extern bool opt_debug;
 /*
  * Constructors and such
  */
 SMap::SMap(const STable table)
-{
+{    if (opt_debug) cerr << "SMap from STable at " << this << " allocated\n";
+
 
     for (int i = 0; i < 9; i++) {
         sure_cand_col[i] = 0;
@@ -45,10 +47,10 @@ SMap::SMap(const STable table)
             end = start + 1;
             while (end < 9 && !blank[i*9+end])
                 end++;
-            auto str8t = std::make_unique<Straight>(
-               this, fields+i*9+start, fields+i*9+end, 1, i*9 + start
+            auto new_str = std::make_unique<Straight>(
+               this, & fields[i*9+start], & fields[i*9+end], 1, i*9 + start
            );
-            row_straights[i].push_back(std::move(str8t));
+            row_straights[i].push_back(std::move(new_str));
             start = end + 1;
         }
         while (start < 9);
@@ -65,10 +67,10 @@ SMap::SMap(const STable table)
             end = start + 1;
             while (end < 9 && !blank[end*9+j])
                 end++;
-            auto str8t = std::make_unique<Straight>(
-                this, fields+start*9+j, fields+end*9+j, 9, start*9 + j
+            auto new_str = std::make_unique<Straight>(
+                this, & fields[start*9+j], & fields[end*9+j], 9, start*9 + j
             );
-            col_straights[j].push_back(std::move(str8t));
+            col_straights[j].push_back(std::move(new_str));
             start = end + 1;
         }
         while (start < 9);
@@ -76,45 +78,49 @@ SMap::SMap(const STable table)
 }
 
 SMap::SMap(const SMap& smp)
-{
+{    if (opt_debug) cerr << "SMap from SMap at " << this << " allocated\n";
+
     // violation of the rules sets this to true
     hash_value = smp.hash_value;
 
 
-    memcpy(&sure_cand_row, &smp.sure_cand_row, 9*sizeof(uint16_t));
-    memcpy(&sure_cand_col, &smp.sure_cand_col, 9*sizeof(uint16_t));
-    memcpy(fields, smp.fields, 81*sizeof(uint16_t));
-    memcpy(blank, smp.blank, 81*sizeof(bool));
-    memcpy(fixed, smp.fixed, 81*sizeof(bool));
+    sure_cand_row = smp.sure_cand_row;
+    sure_cand_col = smp.sure_cand_col;
+    fields = smp.fields;
+    blank = smp.blank;
+    fixed = smp.fixed;
 
     for (int i = 0; i < 9; i++) {
-        for (auto && str8t : smp.row_straights[i]) {
-            auto str = std::make_unique<Straight>(*str8t);
+        for (auto && old_str : smp.row_straights[i]) {
+            auto new_str = std::make_unique<Straight>(*old_str);
             // set pointers correctly
-            str->map = this;
-            str->start = str8t->start - smp.fields + fields;
-            str->end = str8t->end - smp.fields + fields;
-            row_straights[i].push_back(std::move(str));
+            new_str->map = this;
+            new_str->start = & fields[old_str->starts_at];
+            new_str->end = & fields[old_str->ends_at];
+            row_straights[i].push_back(std::move(new_str));
         }
-        for (auto && str8t : smp.col_straights[i]) {
-            auto str = std::make_unique<Straight>(*str8t);
+        for (auto && old_str : smp.col_straights[i]) {
+            auto new_str = std::make_unique<Straight>(*old_str);
             // set pointers correctly
-            str->map = this;
-            str->start = str8t->start - smp.fields + fields;
-            str->end = str8t->end - smp.fields + fields;
-            col_straights[i].push_back(std::move(str));
+            new_str->map = this;
+            new_str->start = & fields[old_str->starts_at];
+            new_str->end = & fields[old_str->ends_at];
+            col_straights[i].push_back(std::move(new_str));
         }
     }
 }
 
 SMap& SMap::operator=(SMap mp)
 {
+    assert(false);    // not used
     auto new_map = std::make_unique<SMap>(mp);
+    if (opt_debug) cerr << "SMap with = at " << this << " allocated\n";
     return *std::move(new_map);
 }
 
 SMap::~SMap()
 {
+    if (opt_debug) cerr << "SMap at " << this << " deleted\n";
 }
 
 ///////////
@@ -187,7 +193,7 @@ bool SMap::remove_used_digits()
         if(singles[fields[i]] && !fixed[i]) {
             char row = i%9;
             char col = i-row;
-            uint16_t temp = ~fields[i];
+            auto temp = ~fields[i];
             // row deletion
             for(int j = 0; j < 9; j++)
                 fields[col+j] &= temp;
@@ -218,7 +224,7 @@ bool SMap::straight_range()
 bool SMap::sure_candidates()
 {
     StartStop  x = StartStop(__func__);
-    uint16_t sure = 0;
+    Candidates sure = 0;
     // remove sure candidates of one straight from the others
     for (int i = 0; i < 9; i++) {
         sure = 0;
@@ -319,7 +325,7 @@ bool SMap::naked_groups()
 bool SMap::make_sure()
 {
     StartStop  x = StartStop(__func__);
-    uint16_t sure = 0;
+    Candidates sure = 0;
     for (int i = 0; i < 9; i++) {
         sure = 0;
         // collect all sure candidates
