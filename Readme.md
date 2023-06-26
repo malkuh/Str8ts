@@ -22,6 +22,8 @@ $ ./solver ../problems/example.txt
 - **-v**: be verbose, some more messages.
 - **-t**: activate tracing and produce final statistics.
 - **-i**: Get prompt to enter Straits row wise from command line.
+- **-a**: Find all solutions (max 16).
+- **-d**: Debug: Logs some constructors and destructors.
 
 ### Input
 
