@@ -10,10 +10,10 @@
 #include "Str8ts.hpp"
 #include "runstats.hpp"
 #include "helpme.hpp"
+#include "verbose.hpp"
 
 using namespace std;
 
-bool opt_verbose = false;
 bool opt_trace = false;
 bool opt_debug = false;
 bool opt_all = false;
@@ -27,7 +27,7 @@ int main(int argc, char * argv[])
         const string file = argv[j];
         
         if (file == "-v") {
-            opt_verbose = true;
+            Verbose::on = true;
             continue;
         }
         if (file == "-t") {

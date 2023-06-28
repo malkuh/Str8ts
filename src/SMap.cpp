@@ -2,10 +2,10 @@
 
 #include "LUTs.hpp"
 #include "runstats.hpp"
+#include "verbose.hpp"
 
 using namespace std;
 
-extern bool opt_verbose;
 extern bool opt_debug;
 /*
  * Constructors and such
@@ -166,7 +166,7 @@ bool SMap::apply_rules()
         // jumps here if somethings has changed
         violation_check:
         if (!violation_free()) {
-            if (opt_verbose) print();
+            if (Verbose::on) print();
             return false;
         }
     }
@@ -379,13 +379,11 @@ bool SMap::solved()
 
 bool SMap::violation_free()
 {
-    extern bool opt_verbose;
-    
     for (int i = 0; i < 81; i++)
         if (!fields[i] && !blank[i]) {
-            if (opt_verbose) {
+            if (Verbose::on) {
                 
-                cout << "ABCDEFGHJ"[i/9] << "123456789"[i%9] << " is dead:" << endl;
+                cout << Verbose::coordinates(i) <<  " is dead:" << endl;
             }
             return false;
         }

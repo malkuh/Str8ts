@@ -1,4 +1,5 @@
 #include "Straight.hpp"
+#include "verbose.hpp"
 
 using namespace std;
 
@@ -130,4 +131,29 @@ bool Straight::range_violation()
     else
         range_violation_verbose();
         return true;
+}
+
+void Straight::range_violation_verbose() const {
+    
+    if (!Verbose::on) return;
+    
+    std::string straight = "";
+    if ( incr == 1 ) {
+        // row
+        const int col = starts_at % 9;
+        straight += Verbose::ROWS[starts_at/9];
+        for ( int i = col; i < col + length; i += 1 ) {
+            straight += Verbose::COLS[i];
+        }
+        
+    } else {
+        // col
+        const int row = starts_at / 9;
+        for ( int i = row; i < row + length; i += 1 ) {
+            straight += Verbose::ROWS[i];
+        }
+        straight += Verbose::COLS[starts_at%9];
+    }
+    
+    std::cout << "range violation in " << straight << ":\n";
 }

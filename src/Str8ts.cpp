@@ -32,9 +32,8 @@ bool Str8ts::solve(SMap* st_instance)
 
         // if not solved yet call this function recursively with guessed numbers
         if(!st_instance->solved()) {
-            extern bool opt_verbose;
             
-            if (opt_verbose) {
+            if (Verbose::on) {
                 st_instance->print();
                 cout << "\nGuessing..." << endl;
             }
@@ -42,13 +41,13 @@ bool Str8ts::solve(SMap* st_instance)
             auto sub_t_instances = st_instance->choose();
             bool solved = false;
             for (auto && st_inst : sub_t_instances) {
-                if (opt_verbose) {
+                if (Verbose::on) {
                     string guess = " trying ";
                     for (int i = 0; i < 81; i++) {
                         
                         if (st_inst->fields[i] == st_instance->fields[i]) continue;
                         guess += '0' + ffs(st_inst->fields[i]);
-                        guess += " at " + coordinates(i);
+                        guess += " at " + Verbose::coordinates(i);
                         cout << guess << endl;
                         break;
                     }

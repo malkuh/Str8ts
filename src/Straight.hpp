@@ -48,7 +48,7 @@ struct Straight
     void hidden_pairs();
 
     bool range_violation();
-    void range_violation_verbose();
+    void range_violation_verbose() const;
 
 };
 
