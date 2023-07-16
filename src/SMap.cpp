@@ -1,17 +1,18 @@
 #include "SMap.hpp"
 
 #include "LUTs.hpp"
+#include "runstats.hpp"
+#include "verbose.hpp"
 
 using namespace std;
 
+extern bool opt_debug;
 /*
  * Constructors and such
  */
 SMap::SMap(const STable table)
-{
-    fields = new uint16_t[9*9];
-    blank = new bool[9*9];
-    fixed = new bool[9*9];
+{    if (opt_debug) cerr << "SMap from STable at " << this << " allocated\n";
+
 
     for (int i = 0; i < 9; i++) {
         sure_cand_col[i] = 0;
@@ -33,7 +34,7 @@ SMap::SMap(const STable table)
     }
 
     // init straights
-    char start, end, length;
+    char start, end;
     // rows
     for (char i = 0; i < 9; i++) {
         start = 0;
@@ -46,9 +47,10 @@ SMap::SMap(const STable table)
             end = start + 1;
             while (end < 9 && !blank[i*9+end])
                 end++;
-            length = end - start;
-            Straight* str8t = new Straight(this, fields+i*9+start, fields+i*9+end, 1);
-            row_straights[i].push_back(str8t);
+            auto new_str = std::make_unique<Straight>(
+               this, & fields[i*9+start], & fields[i*9+end], 1, i*9 + start
+           );
+            row_straights[i].push_back(std::move(new_str));
             start = end + 1;
         }
         while (start < 9);
@@ -65,9 +67,10 @@ SMap::SMap(const STable table)
             end = start + 1;
             while (end < 9 && !blank[end*9+j])
                 end++;
-            length = end - start;
-            Straight* str8t = new Straight(this, fields+start*9+j, fields+end*9+j, 9);
-            col_straights[j].push_back(str8t);
+            auto new_str = std::make_unique<Straight>(
+                this, & fields[start*9+j], & fields[end*9+j], 9, start*9 + j
+            );
+            col_straights[j].push_back(std::move(new_str));
             start = end + 1;
         }
         while (start < 9);
@@ -75,57 +78,49 @@ SMap::SMap(const STable table)
 }
 
 SMap::SMap(const SMap& smp)
-{
+{    if (opt_debug) cerr << "SMap from SMap at " << this << " allocated\n";
+
     // violation of the rules sets this to true
     hash_value = smp.hash_value;
 
-    fields = new uint16_t[9*9];
-    blank = new bool[9*9];
-    fixed = new bool[9*9];
 
-    memcpy(&sure_cand_row, &smp.sure_cand_row, 9*sizeof(uint16_t));
-    memcpy(&sure_cand_col, &smp.sure_cand_col, 9*sizeof(uint16_t));
-    memcpy(fields, smp.fields, 81*sizeof(uint16_t));
-    memcpy(blank, smp.blank, 81*sizeof(bool));
-    memcpy(fixed, smp.fixed, 81*sizeof(bool));
+    sure_cand_row = smp.sure_cand_row;
+    sure_cand_col = smp.sure_cand_col;
+    fields = smp.fields;
+    blank = smp.blank;
+    fixed = smp.fixed;
 
     for (int i = 0; i < 9; i++) {
-        for (auto str8t : smp.row_straights[i]) {
-            Straight* str = new Straight(*str8t);
-            row_straights[i].push_back(str);
+        for (auto && old_str : smp.row_straights[i]) {
+            auto new_str = std::make_unique<Straight>(*old_str);
             // set pointers correctly
-            str->map = this;
-            str->start = str8t->start - smp.fields + fields;
-            str->end = str8t->end - smp.fields + fields;
+            new_str->map = this;
+            new_str->start = & fields[old_str->starts_at];
+            new_str->end = & fields[old_str->ends_at];
+            row_straights[i].push_back(std::move(new_str));
         }
-        for (auto str8t : smp.col_straights[i]) {
-            Straight* str = new Straight(*str8t);
-            col_straights[i].push_back(str);
+        for (auto && old_str : smp.col_straights[i]) {
+            auto new_str = std::make_unique<Straight>(*old_str);
             // set pointers correctly
-            str->map = this;
-            str->start = str8t->start - smp.fields + fields;
-            str->end = str8t->end - smp.fields + fields;
+            new_str->map = this;
+            new_str->start = & fields[old_str->starts_at];
+            new_str->end = & fields[old_str->ends_at];
+            col_straights[i].push_back(std::move(new_str));
         }
     }
 }
 
 SMap& SMap::operator=(SMap mp)
 {
-    SMap *new_map = new SMap(mp);
-    return *new_map;
+    assert(false);    // not used
+    auto new_map = std::make_unique<SMap>(mp);
+    if (opt_debug) cerr << "SMap with = at " << this << " allocated\n";
+    return *std::move(new_map);
 }
 
 SMap::~SMap()
 {
-    delete[] fields;
-    delete[] blank;
-    delete[] fixed;
-    for (int i = 0; i < 9; i++) {
-        for (auto str8t : row_straights[i])
-            delete str8t;
-        for (auto str8t : col_straights[i])
-            delete str8t;
-    }
+    if (opt_debug) cerr << "SMap at " << this << " deleted\n";
 }
 
 ///////////
@@ -134,6 +129,7 @@ SMap::~SMap()
 
 bool SMap::apply_rules()
 {
+    StartStop  x = StartStop(__func__);
     change();
 
     bool no_change = false;
@@ -170,6 +166,7 @@ bool SMap::apply_rules()
         // jumps here if somethings has changed
         violation_check:
         if (!violation_free()) {
+            if (Verbose::on) print();
             return false;
         }
     }
@@ -191,11 +188,12 @@ bool SMap::change()
 
 bool SMap::remove_used_digits()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 81; i++) {
         if(singles[fields[i]] && !fixed[i]) {
             char row = i%9;
             char col = i-row;
-            uint16_t temp = ~fields[i];
+            auto temp = ~fields[i];
             // row deletion
             for(int j = 0; j < 9; j++)
                 fields[col+j] &= temp;
@@ -211,12 +209,13 @@ bool SMap::remove_used_digits()
 
 bool SMap::straight_range()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             str->check_range();
     }
     for (int i = 0; i < 9; i++) {
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             str->check_range();
     }
     return change();
@@ -224,23 +223,24 @@ bool SMap::straight_range()
 
 bool SMap::sure_candidates()
 {
-    uint16_t sure = 0;
+    StartStop  x = StartStop(__func__);
+    Candidates sure = 0;
     // remove sure candidates of one straight from the others
     for (int i = 0; i < 9; i++) {
         sure = 0;
         // collect all sure candidates
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             sure |= str->sure;
         // remove them
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             str->sure_candidates(sure);
         sure_cand_row[i] = sure;
         sure = 0;
         // collect all sure candidates
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             sure |= str->sure;
         // remove them
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             str->sure_candidates(sure);
         sure_cand_col[i] = sure;
     }
@@ -249,10 +249,11 @@ bool SMap::sure_candidates()
 
 bool SMap::sure_singles()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             str->sure_singles();
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             str->sure_singles();
     }
     return change();
@@ -260,10 +261,11 @@ bool SMap::sure_singles()
 
 bool SMap::stranded_digits()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             str->stranded_digits();
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             str->stranded_digits();
     }
     return change();
@@ -271,10 +273,11 @@ bool SMap::stranded_digits()
 
 bool SMap::naked_pairs()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             str->naked_pairs();
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             str->naked_pairs();
     }
     return change();
@@ -283,6 +286,7 @@ bool SMap::naked_pairs()
 bool SMap::naked_groups()
 {
     // for pairs
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (set_bits[fields[9*i+j]] == 2) {
@@ -320,16 +324,17 @@ bool SMap::naked_groups()
 
 bool SMap::make_sure()
 {
-    uint16_t sure = 0;
+    StartStop  x = StartStop(__func__);
+    Candidates sure = 0;
     for (int i = 0; i < 9; i++) {
         sure = 0;
         // collect all sure candidates
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             sure |= str->sure;
         sure_cand_row[i] = sure;
         sure = 0;
         // collect all sure candidates
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             sure |= str->sure;
         sure_cand_col[i] = sure;
     }
@@ -338,10 +343,11 @@ bool SMap::make_sure()
 
 bool SMap::hidden_pairs()
 {
+    StartStop  x = StartStop(__func__);
     for (int i = 0; i < 9; i++) {
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             str->hidden_pairs();
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             str->hidden_pairs();
     }
     return change();
@@ -375,13 +381,17 @@ bool SMap::violation_free()
 {
     for (int i = 0; i < 81; i++)
         if (!fields[i] && !blank[i]) {
+            if (Verbose::on) {
+                
+                cout << Verbose::coordinates(i) <<  " is dead:" << endl;
+            }
             return false;
         }
     for (int i = 0; i < 9; i++) {
-        for (auto str : row_straights[i])
+        for (auto && str : row_straights[i])
             if (str->range_violation())
                 return false;
-        for (auto str : col_straights[i])
+        for (auto && str : col_straights[i])
             if (str->range_violation())
                 return false;
     }
@@ -389,7 +399,7 @@ bool SMap::violation_free()
 }
 
 // returns a list for backtracking
-std::list<SMap*> SMap::choose()
+std::list<std::unique_ptr<SMap>> SMap::choose()
 {
     int i;
     // backtracking a field with a small number of possible digits seems to be advantagous.
@@ -404,12 +414,12 @@ std::list<SMap*> SMap::choose()
         }
     i = field;
 
-    list<SMap*> list_st;
+    list<std::unique_ptr<SMap>> list_st;
     for (int j = 0; j < 9; j++) {
         if (fields[i] & numbers[j]) {
-            SMap* st = new SMap(*this);
+            auto st = std::make_unique<SMap>(*this);
             st->fields[i] = numbers[j];
-            list_st.push_back(st);
+            list_st.push_back(std::move(st));
         }
     }
     return list_st;
